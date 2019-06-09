@@ -8,12 +8,12 @@
 ### Setting up Environment
 #########################################################################################################################
 
-# Load library & functions
-pkgs <- c("rpart", "ada", "caTools", "crayon", "ggplot2", "gplots", "PairedData", "car", "tidyr", "reshape", "coin")
+# Load library
+pkgs <- c("rpart", "ada", "caTools", "crayon", "ggplot2", "gplots", "PairedData", "car", "tidyr", "reshape")
 sapply(pkgs, require, character.only = T)
-load("Functions.RData")
 
-# Load data
+# Load functions and data
+load("Functions.RData")
 load("Datasets.RData")
 res.all <- read.csv(url("http://bit.ly/Flex_Boost"), header = T)
 
@@ -50,12 +50,15 @@ table.2 <- data.frame(Data = c(as.character(res.r1$Data), "Avg.Acc"),
                       round(acc.r1, 6), Optimal.K = c(res.r1$Optimal.K, NA))
 
 # Table 3. Friedman post hoc test
-res.ranks <- as.matrix(res.all[, 3:6])
+res.ranks <- as.matrix(res.all[1:90, 3:6])
 for(i in 1:nrow(res.ranks)){res.ranks[i,] <- rank(-res.all[i, 3:6], ties.method = "min")}
-res.fried <- friedman.test.with.post.hoc(value ~ X2 | X1, melt(res.ranks))
+res.fm.ph <- friedman.post.hoc(value ~ X2 | X1, melt(res.ranks))
+res.p.val <- c(rep(NA, 4), res.fm.ph$PostHoc.Test[3], rep(NA, 3), 
+               res.fm.ph$PostHoc.Test[c(2, 6)], rep(NA, 2),
+               res.fm.ph$PostHoc.Test[c(1, 5, 4)], NA)
 res.mrank <- colMeans(res.ranks)
-table.3   <- matrix(rbind(matrix(NA, 4, 4), round(res.mrank, 2)), 5, 4, 
-                    dimnames = list(c(names(res.mrank), "Mean rank"), names(res.mrank)))
+table.3   <- matrix(cbind(matrix(res.p.val, 4, 4), round(res.mrank, 2)), 4, 5, 
+                    dimnames = list(names(res.mrank), c(names(res.mrank), "Mean rank")))
 
 # Figure 3.Performance benchmarks
 par(mfrow = c(1,6))
