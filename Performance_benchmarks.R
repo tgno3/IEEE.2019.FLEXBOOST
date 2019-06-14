@@ -140,3 +140,6 @@ plot(1:iterations, result_h, col = "red",  xlab = "Iterations", ylab = "Accuracy
         keyheight=0.2,
         default.unit="inch")
       )
+
+    # test change
+    
