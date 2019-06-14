@@ -52,7 +52,7 @@ table.2 <- data.frame(Data = c(as.character(res.r1$Data), "Avg.Acc"),
 # Table 3. Friedman post hoc test
 res.ranks <- as.matrix(res.all[1:90, 3:6])
 for(i in 1:nrow(res.ranks)){res.ranks[i,] <- rank(-res.all[i, 3:6], ties.method = "min")}
-res.fm.ph <- friedman.post.hoc(value ~ X2 | X1, melt(res.ranks))
+res.fm.ph <- friedman.test.with.post.hoc(value ~ X2 | X1, melt(res.ranks))
 res.p.val <- c(rep(NA, 4), res.fm.ph$PostHoc.Test[3], rep(NA, 3), 
                res.fm.ph$PostHoc.Test[c(2, 6)], rep(NA, 2),
                res.fm.ph$PostHoc.Test[c(1, 5, 4)], NA)
