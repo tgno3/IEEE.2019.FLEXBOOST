@@ -15,14 +15,13 @@ sapply(pkgs, require, character.only = T)
 # Load functions and data
 load("Functions.RData")
 load("Datasets.RData")
-res.all <- read.csv(url("http://bit.ly/Flex_Boost"), header = T)
-
+res.acc.all <- read.csv(url("http://bit.ly/Flex_Boost"), header = T)
 
 #########################################################################################################################
 ### Analysis
 #########################################################################################################################
 
-# Figure 1. Loss functions
+# Figure 1. Loss functions (k < 1, k = 1, k > 1)
 x   <- seq(-1, 1, 0.0001)
 s   <- 1.7
 l   <- 2
@@ -49,14 +48,21 @@ for(i in 1:nrow(table.1)){table.1[i,] <- dim(df.all[[i]]) - c(0, sum(grepl("clas
 print(table.1[-c(17:18, 20:21, 23:24, 26:27, 29:30),])
 
 # Table 2. Performance Benchmarks (round 1)
-res.r1  <- subset(res.all, Round == 1)
+res.r1  <- subset(res.acc.all, Round == 1)
 acc.r1  <- rbind(res.r1[,3:6], colMeans(res.r1[,c(3:6)]))
 table.2 <- data.frame(Data = c(as.character(res.r1$Data), "Avg.Acc"),
                       round(acc.r1, 6), Optimal.K = c(res.r1$Optimal.K, NA))
 
 # Figure 3.Performance benchmarks
-par(mfrow = c(1, 6))
-plot(1:iterations, result_h, col = "red",  xlab = "Iterations", ylab = "Accuracy", main = 'Cmc3', 
+data_names = "Iris3" 
+
+result_b   <- res.itr.all.ada[ , colnames(res.itr.all.ada) == data_names]
+result_l   <- res.itr.all.logit[ , colnames(res.itr.all.logit) == data_names]
+result_g   <- res.itr.all.gentle[ , colnames(res.itr.all.gentle) == data_names]
+result_h   <- res.itr.all.flex[ , colnames(res.itr.all.flex) == data_names]
+iterations <- 100
+
+plot(1:iterations, result_h, col = "red",  xlab = "Iterations", ylab = "Accuracy", main = data_names, 
      cex.lab = 2, cex.main = 2,
      ylim = c(min(min(unlist(result_b)), 
                   min(unlist(result_h)),
@@ -106,8 +112,8 @@ plot(1:iterations, result_g, col = "black", xlab = "", ylab = "",
 lines(1:iterations, result_g, col = "black", lty = 6)
 
 # Table 3. Friedman post hoc test
-res.ranks <- as.matrix(res.all[, 3:6])
-for(i in 1:nrow(res.ranks)){res.ranks[i,] <- rank(-res.all[i, 3:6], ties.method = "min")}
+res.ranks <- as.matrix(res.acc.all[, 3:6])
+for(i in 1:nrow(res.ranks)){res.ranks[i,] <- rank(-res.acc.all[i, 3:6], ties.method = "min")}
 res.fm.ph <- friedman.post.hoc(value ~ X2 | X1, melt(res.ranks))
 res.p.val <- c(rep(NA, 4), res.fm.ph$PostHoc.Test[3], rep(NA, 3), 
                res.fm.ph$PostHoc.Test[c(2, 6)], rep(NA, 2),
@@ -118,9 +124,9 @@ table.3   <- matrix(cbind(matrix(res.p.val, 4, 4), round(res.mrank, 2)), 4, 5,
 
 
 # Figure 4. Ratio of algorithms to be in top-n ranks
-res.ranks <- cbind(Data = res.all$Data, 
-                   as.data.frame(t(apply(res.all[, 3:6], 1, function(temp){rank(-temp, ties.method = "min")}))), 
-                   Round = res.all$Round)
+res.ranks <- cbind(Data = res.acc.all$Data, 
+                   as.data.frame(t(apply(res.acc.all[, 3:6], 1, function(temp){rank(-temp, ties.method = "min")}))), 
+                   Round = res.acc.all$Round)
 
 res.ratio <- as.numeric(t(apply(res.ranks[, 2:5], 2, 
                                 function(temp){c(length(which(temp <= 1)), length(which(temp <= 2)), 
@@ -168,7 +174,7 @@ X             <- data[, independent]
 y             <- data[, dependent]
 
 kfold.ada(seed = 1,iter = 100)       # (seed, iterations)
-kfold.gentle(seed = 1,iter = 10)    # (seed, iterations)
+kfold.gentle(seed = 1,iter = 100)    # (seed, iterations)
 kfold.logit(seed = 1,iter = 100)     # (seed, iterations)
 kfold.flex(k.value = 0.34, seed = 1,iter = 100)  # (parameter_k , seed, iterations)
 
