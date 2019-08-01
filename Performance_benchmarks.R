@@ -39,8 +39,10 @@ plot(x, y.3, type = "l", col = "blue",  ylim = c(m, M), xlab = "", ylab = "", lw
 segments(-1, 1, 0, 1, lty = l, col = "orange", lwd = l)
 segments( 0, 1, 0, 0, lty = l, col = "orange", lwd = l)
 segments(-0, 0, 1, 0, lty = l, col = "orange", lwd = l)
-legend(0, 5.2, legend = c("Exponential K > 1", "Exponential K = 1", "Exponential K < 1", "Classification\n(Zero-One)"),
-       col = c("red", "black", "blue", "orange"), lty = c(1, 1, 1, 2), cex = 0.74, lwd = l)
+legend(0.45, 5.5, legend = expression('Exponential', italic('k'), ' > 1' ))
+legend(0.45, 5.5, legend = c(expression(paste('Exponential ', italic('k'), ' > 1' )), expression(paste('Exponential ', italic('k'), ' = 1' )), expression(paste('Exponential ', italic('k'), ' < 1' )), 'Zero-One'),
+       col = c("red", "black", "blue", "orange"), lty = c(1, 1, 1, 2), cex = 1, lwd = l) 
+
 
 # Table 1. Description of the datasets
 table.1 <- matrix(NA, length(df.all), 2, dimnames = list(names(df.all), c("No.Instances", "No.Attributes")))
@@ -143,15 +145,15 @@ ggplot(data = rank.ratio, aes(x = Ranking, y = Ratio, fill = factor(Algorithm)))
   scale_y_continuous(expand = c(0,0)) +
   coord_cartesian(ylim = c(0.0,1.05)) +
   theme_bw() +
-  theme(legend.position = c(0.07,0.85), legend.title = element_text(size = 15)) +
-  labs(x = "Rank", y = "Ratio", fill = "Algorithm") +
-  theme(axis.title.x = element_text(family ='sans' , face = 2, color = 'black', size=12)) +
-  theme(axis.title.y = element_text(family ='sans' , face = 2, color = 'black', size=12)) +
-  theme(axis.text.x = element_text(family ='sans' , face = 2, color = 'black', size=12)) +
-  theme(axis.text.y = element_text(family ='sans' , face = 2, color = 'black', size=12)) +
-  theme(plot.title = element_text(family ='sans' , face = 2, color = 'black', size=20)) +
-  theme(legend.text=element_text(size=12)) +
-  geom_text(aes(label=Ratio), color="black", vjust=-0.5, position = position_dodge(0.5), size=4) +
+  theme(legend.position = c(0.09,0.90), legend.title = element_text(size = 1)) +
+  labs(x = "Rank", y = "Ratio", fill = "") +
+  theme(axis.title.x = element_text(family ='sans' , face = 'plain', color = 'black', size=20)) +
+  theme(axis.title.y = element_text(family ='sans' , face = 'plain', color = 'black', size=20)) +
+  theme(axis.text.x = element_text(family ='sans' , face = 'plain', color = 'black', size=20)) +
+  theme(axis.text.y = element_text(family ='sans' , face = 'plain', color = 'black', size=20)) +
+  theme(plot.title = element_text(family ='sans' , face = 'plain', color = 'black', size=22)) +
+  theme(legend.text=element_text(size=17)) +
+  geom_text(aes(label=Ratio), color="black", vjust=-0.5, position = position_dodge(0.5), size=5.5) +
   scale_fill_manual(values=c("green3", "blue2", "black", "red2"),
                     labels = c("AdaBoost", "LogitBoost", "GentleBoost", "FlexBoost")) +
   guides(fill=guide_legend(
