@@ -12,11 +12,14 @@
 pkgs <- c("rpart", "ada", "caTools", "crayon", "ggplot2", "gplots", "PairedData", "car", "tidyr", "reshape")
 sapply(pkgs, require, character.only = T)
 
-# Load functions
+# Load function
 load("Functions.RData")
 
 # Load data
 load("Datasets.RData")
+
+# Load result
+load("Results.RData")
 
 # Parameter
 data        <- Haberman
@@ -38,7 +41,7 @@ y.2 <- exp(-s*x)
 y.3 <- exp(-(1/s)*x)
 m   <- min(y.1, y.2, y.3)
 M   <- max(y.1, y.2, y.3)
-plot(x, y.1, type = "l", col = "black", ylim = c(m, M), xlab = "y·f", ylab = "LOSS", lwd = l)
+plot(x, y.1, type = "l", col = "black", ylim = c(m, M), xlab = "y??f", ylab = "LOSS", lwd = l)
 grid()
 par(new = TRUE)
 plot(x, y.2, type = "l", col = "red",   ylim = c(m, M), xlab = "", ylab = "", lwd = l)
@@ -60,14 +63,15 @@ print(table.1[-c(17:18, 20:21, 23:24, 26:27, 29:30),])
 ## Figure 3. Performance benchmarks on 30 UCI and Kaggle datasets
 plot.result(29) # Plot 1-29 data accuracies(Except Iris_1 due to acc 1)
 
+
+## Table 2. Performance benchmarks (accuracy)
+Table.2
+
 ## Table 3. Friedman post hoc test results (p-value) on rankings and average accuracies
 # Load acc step_1
-res.acc.all <- read.csv(url("http://bit.ly/Flex_Boost"), header = T)
-
-# Load acc step_2
 res.ranks <- as.matrix(res.acc.all[, 3:6])
 
-# Load acc step_3
+# Load acc step_2
 for(i in 1:nrow(res.ranks)){res.ranks[i,] <- rank(-res.acc.all[i, 3:6], ties.method = "min")}
 
 # Friedman test
@@ -97,4 +101,3 @@ kfold.gentle(30)
 
 ##Kfold FlexBoost 
 kfold.flex(30,0.2,1) #iteration, par.k, type(1-3 for tie evaluation)
-
