@@ -9,7 +9,7 @@
 #########################################################################################################################
 
 # Load library
-pkgs <- c("rpart", "ada", "caTools", "crayon", "ggplot2", "gplots", "PairedData", "car", "tidyr", "reshape", "coin")
+pkgs <- c("rpart", "ada", "caTools", "crayon", "ggplot2", "gplots", "coin", "reshape")
 sapply(pkgs, require, character.only = T)
 
 # Load data
@@ -77,8 +77,8 @@ res.mrank <- colMeans(res.ranks)
 res.macc  <- as.character(round(colMeans(res.acc.all[,3:6]),4))
 table.3   <- as.data.frame(matrix(rbind(matrix(round(res.p.val, 4), 4, 4), as.character(round(colMeans(res.ranks), 2)), res.macc), 6, 4, 
                                   dimnames = list(c(names(res.mrank), "Mean Rank", "Mean Accuracy"), names(res.mrank))))
-
 print(table.3)
+
 
 #########################################################################################################################
 ### Appendix. Experiment
@@ -92,14 +92,17 @@ s           <- 9 #Seed
 X           <- data[, independent]
 y           <- data[, dependent]
 
-##Kfold AdaBoost
+
+## Kfold AdaBoost
 kfold.ada(30)
 
-##Kfold LogitBoost
+
+## Kfold LogitBoost
 kfold.logit(30)
 
-##Kfold GentleBoost
+
+## Kfold GentleBoost
 kfold.gentle(30)
 
-##Kfold FlexBoost 
+## Kfold FlexBoost 
 kfold.flex(30,0.2,1) #iteration, par.k, type(1-3 for tie evaluation)
