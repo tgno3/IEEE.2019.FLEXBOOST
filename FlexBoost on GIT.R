@@ -73,6 +73,12 @@ res.fm.ph <- friedman.post.hoc(value ~ X2 | X1, melt(res.ranks))
 res.p.val <- c(rep(NA, 4), res.fm.ph$PostHoc.Test[3], rep(NA, 3), 
                res.fm.ph$PostHoc.Test[c(2, 6)], rep(NA, 2),
                res.fm.ph$PostHoc.Test[c(1, 5, 4)], NA)
+res.mrank <- colMeans(res.ranks)
+res.macc  <- colMeans(res.acc.all[,3:6])
+table.3   <- matrix(cbind(matrix(round(res.p.val, 4), 4, 4), round(res.mrank, 2), round(res.macc, 4)), 4, 6, 
+                    dimnames = list(names(res.mrank), c(names(res.mrank), "Mean Rank", "Mean Accuracy")))
+
+print(table.3)
 
 
 #########################################################################################################################
