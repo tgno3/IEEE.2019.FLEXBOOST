@@ -75,15 +75,10 @@ res.p.val <- c(rep(NA, 4), res.fm.ph$PostHoc.Test[3], rep(NA, 3),
                res.fm.ph$PostHoc.Test[c(1, 5, 4)], NA)
 res.mrank <- colMeans(res.ranks)
 res.macc  <- colMeans(res.acc.all[,3:6])
-#table.3   <- matrix(rbind(matrix(round(res.p.val, 4), 4, 4), round(res.mrank, 2), round(res.macc, 4)), 6, 4, 
-#                    dimnames = list(c(names(res.mrank), "Mean Rank", "Mean Accuracy"), names(res.mrank)))
+table.3   <- matrix(rbind(matrix(round(res.p.val, 4), 4, 4), format(res.mrank, digits = 3), format(res.macc, digits = 4)), 6, 4, 
+                    dimnames = list(c(names(res.mrank), "Mean Rank", "Mean Accuracy"), names(res.mrank)))
 
-#print(table.3)
-
-table.3   <- as.data.frame(matrix(rbind(matrix(round(res.p.val, 4), 4, 4), res.mrank, res.macc), 6, 4, 
-                    dimnames = list(c(names(res.mrank), "Mean Rank", "Mean Accuracy"), names(res.mrank))))
-
-table.3[5,] <- round(table.3[5,], 2)
+print(table.3)
 
 #########################################################################################################################
 ### Appendix. Experiment
